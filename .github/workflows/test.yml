@@ -1,0 +1,60 @@
+name: Maven CI/CD
+
+on:
+  # Triggers the workflow on push or pull request events to the main branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to manually run the workflow from the Actions tab on GitHub
+  workflow_dispatch:
+
+jobs:
+  build:
+    # Specifies the runner environment for this job
+    runs-on: ubuntu-latest
+
+    # Optional: You can specify a matrix of Java versions to test against
+    strategy:
+      matrix:
+        java: [ '21' ] # Change this to your project's required Java version (e.g., '11', '21')
+
+    steps:
+      - name: ⬇️ Checkout Repository
+        # Action to check out your repository code
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK ${{ matrix.java }}
+        # Action to set up the Java environment
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          # Use the Maven settings file if you have one
+          cache: 'maven'
+
+      - name: 📦 Cache Maven Dependencies
+        # This step caches the local Maven repository (~/.m2/repository)
+        # It dramatically speeds up subsequent builds by reusing downloaded dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          # Key is generated based on the pom.xml file hash to ensure a new cache
+          # is created when dependencies change.
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: ⚙️ Build and Run Tests
+        # Run the standard Maven command for building and running tests.
+        # The '-B' (batch mode) flag makes the output less verbose and better for CI/CD.
+        # The '-Dmaven.test.failure.ignore=true' is optional; remove it if you want the
+        # build to fail immediately on any test failure (highly recommended).
+        # run: mvn -B package
+        run: mvn -B test
+
+      # You can add more steps here, such as:
+      # - Uploading the build artifact (e.g., a JAR file)
+      # - Pushing a Docker image
+      # - Deploying to a cloud service
