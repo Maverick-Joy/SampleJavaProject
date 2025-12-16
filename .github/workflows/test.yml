@@ -51,8 +51,8 @@ jobs:
         # The '-B' (batch mode) flag makes the output less verbose and better for CI/CD.
         # The '-Dmaven.test.failure.ignore=true' is optional; remove it if you want the
         # build to fail immediately on any test failure (highly recommended).
-        # run: mvn -B package
-        run: mvn -B test
+        run: mvn -B package
+        # run: mvn -B test
 
       # You can add more steps here, such as:
       # - Uploading the build artifact (e.g., a JAR file)
