@@ -1,0 +1,32 @@
+#For GitHub to recognize your code owners, you must create a file named CODEOWNERS (no extension) in one of the following three locations in your repository:
+#The root directory (most common)
+#The .github/ directory (best for keeping the root clean)
+#The docs/ directory
+
+#The syntax for the CODEOWNERS file is straightforward. Each line consists of a file pattern followed by one or more GitHub usernames or team names that are responsible for those files.
+
+#Define the Rules
+#The syntax is simple: [Pattern] [Owner]. You can use GitHub usernames or team names (if the repo is in an Organization).
+#
+#   Pattern       Owner              Result
+#   *             @global-owner      This person owns every file in the repo
+#   *.js          @js-expert         Owns all JavaScript files
+#   /scripts/     @devops-team       Owns everything in the root /scripts folder
+#   docs/**/*     @writer            Owns all files inside the docs directory and its subdirectories
+#
+#
+#Enable "Required Reviews" (Crucial Step)
+#
+#Simply adding the file doesn't stop people from merging code without the owner's permission. To make it "strict," you need to update your branch settings:
+#Go to your repo on GitHub and click Settings
+#On the left sidebar, click Branches
+#Under Branch protection rules, click Edit on your main branch (or create a new rule)
+#Check the box Require a pull request before merging
+#Check the box Require review from Code Owners
+
+#Important Tips:
+#Permissions: Code owners must have write access to the repository to be automatically assigned as reviewers
+#Case Sensitivity: File paths are case-sensitive on GitHub
+#Teams: If you use a team (e.g., @org/team-alpha), ensure the team has explicit write access to the repo
+
+* @Maverick-Joy
