@@ -1,4 +1,4 @@
-name: PR Integrity & Java Tests
+name: PR Integrity Checks
 
 on:
   pull_request:
