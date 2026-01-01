@@ -2,37 +2,43 @@ pipeline {
     agent any
 
     tools {
-        // This must match the name you gave Maven in 'Global Tool Configuration'
-        maven 'LocalMaven'
+        maven 'LocalMaven' 
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // This pulls the code from the GitHub repo linked to the job
                 checkout scm
             }
         }
 
-        stage('Build & Compile') {
+        stage('Build & Test') {
             steps {
-                echo 'Compiling the project...'
-                bat 'mvn clean compile'
+                echo 'Running tests and building package...'
+                bat 'mvn clean package' // 'package' runs tests AND creates the .jar
             }
         }
 
-        stage('Run Tests') {
+        stage('Archive Artifacts') {
             steps {
-                echo 'Running tests...'
-                // Use 'sh' if Jenkins is on Linux, 'bat' if it's on Windows
-                bat 'mvn test'
+                echo 'Saving the .jar file...'
+                // This looks into the 'target' folder and saves any .jar file found
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
-            post {
-                always {
-                    // Record the test results in Jenkins UI
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
+        }
+    }
+    
+    post {
+        always {
+            // Record the test results in Jenkins UI
+            echo 'Collecting test results...'
+            junit '**/target/surefire-reports/*.xml'
+        }
+        success {
+            echo 'Build and Testing successful! Artifact is ready.'
+        }
+        failure {
+            echo 'Build failed. Check the logs and test reports.'
         }
     }
 }
