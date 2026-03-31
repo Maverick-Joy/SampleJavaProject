@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  java-maven-build-via-github-actions:
     # Specifies the runner environment for this job
     runs-on: ubuntu-latest
 
