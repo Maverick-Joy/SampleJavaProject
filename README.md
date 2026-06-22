@@ -2,5 +2,5 @@
 This is a simple Java Maven project for demonstration.
 
 ## Jenkins Job
-Please find the below URL for jenkins job for this project
-[https://iridopupillary-diatonically-teddy.ngrok-free.dev/job/MyJavaTestProject-FreestyleProject/](https://iridopupillary-diatonically-teddy.ngrok-free.dev/job/MyJavaTestProject-FreestyleProject/)
+Jenkins job Link for this project: <n>
+[http://localhost:8080/job/MyJavaTestProject-MBP/](http://localhost:8080/job/MyJavaTestProject-MBP/)
