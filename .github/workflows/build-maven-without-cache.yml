@@ -1,4 +1,4 @@
-name: Build Maven Artifact via GitHub Actions CI/CD platform
+name: Build Maven Artifact (without cache) via GHA CI/CD platform
 
 on:
   # Triggers the workflow on push or pull request events to the main branch
