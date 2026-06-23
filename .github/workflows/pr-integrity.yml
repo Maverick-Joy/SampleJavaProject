@@ -1,29 +1,29 @@
-name: PR Integrity Checks
-
-on:
-  pull_request:
-    branches: [ main, master, develop ]
-    types: [opened, edited, synchronize]
-
-jobs:
-  compliance:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🌿 Check Branch Name
-        run: |
-          BRANCH_NAME="${{ github.head_ref }}"
-          if [[ ! $BRANCH_NAME =~ ^(feat|feature|fix|docs|refactor|chore)/ ]]; then
-            echo "ERROR: Invalid branch name '$BRANCH_NAME'."
-            exit 1
-          fi
-
-      - name: 🏷️ Check PR Title
-        run: |
-          PR_TITLE="${{ github.event.pull_request.title }}"
-          if [[ ! $PR_TITLE =~ ^([A-Z]+-[0-9]+:|feat:|feature:|fix:|docs:|refactor:|chore:).* ]]; then
-            echo "ERROR: Invalid PR Title '$PR_TITLE'."
-            exit 1
-          fi
+#name: PR Integrity Checks
+#
+#on:
+#  pull_request:
+#    branches: [ main, master, develop ]
+#    types: [opened, edited, synchronize]
+#
+#jobs:
+#  compliance:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: 🌿 Check Branch Name
+#        run: |
+#          BRANCH_NAME="${{ github.head_ref }}"
+#          if [[ ! $BRANCH_NAME =~ ^(feat|feature|fix|docs|refactor|chore)/ ]]; then
+#            echo "ERROR: Invalid branch name '$BRANCH_NAME'."
+#            exit 1
+#          fi
+#
+#      - name: 🏷️ Check PR Title
+#        run: |
+#          PR_TITLE="${{ github.event.pull_request.title }}"
+#          if [[ ! $PR_TITLE =~ ^([A-Z]+-[0-9]+:|feat:|feature:|fix:|docs:|refactor:|chore:).* ]]; then
+#            echo "ERROR: Invalid PR Title '$PR_TITLE'."
+#            exit 1
+#          fi
 
 #  build-and-test:
 #    runs-on: ubuntu-latest

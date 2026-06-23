@@ -1,0 +1,11 @@
+name: Run PR Integrity
+
+on:
+  pull_request:
+    branches: [ main, master, develop ]
+    types: [ opened, edited, synchronize ]
+
+jobs:
+  pr-compliance-check:
+    # Syntax: <username>/<repo>/.github/workflows/<filename>@<branch-or-tag>
+    uses: Maverick-Joy/reusable-workflows/.github/workflows/pr-integrity.yml@main
