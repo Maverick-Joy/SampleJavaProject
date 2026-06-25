@@ -7,4 +7,4 @@ on:
 
 jobs:
   pr-compliance-check:
-    uses: Maverick-Joy/reusable-workflows/.github/workflows/pr-integrity.yml@main  # Syntax: <username>/<repo>/.github/workflows/<filename>@<branch-or-tag>
+    uses: Maverick-Joy/reusable-workflows/.github/workflows/pr-integrity.yml@main
