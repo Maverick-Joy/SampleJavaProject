@@ -10,8 +10,12 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+//    sourceCompatibility = JavaVersion.VERSION_21
+//    targetCompatibility = JavaVersion.VERSION_21
+
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 dependencies {
@@ -24,6 +28,11 @@ dependencies {
 test {
     useTestNG() {
         suites 'src/test/resources/testng.xml'
+    }
+
+    testLogging {
+        events "passed", "failed", "skipped"
+        showStandardStreams = true
     }
 }
 
