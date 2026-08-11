@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
 }
 
 group = 'org.programs'
@@ -10,31 +11,62 @@ repositories {
 }
 
 java {
-//    sourceCompatibility = JavaVersion.VERSION_21
-//    targetCompatibility = JavaVersion.VERSION_21
-
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 dependencies {
-    testImplementation 'org.testng:testng:7.11.0'
-
     implementation 'com.google.guava:guava:33.5.0-jre'
     implementation 'org.json:json:20250517'
+    testImplementation 'org.testng:testng:7.11.0'
 }
 
 test {
-    useTestNG() {
+    useTestNG {
         suites 'src/test/resources/testng.xml'
     }
 
     testLogging {
         events "passed", "failed", "skipped"
         showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+
+    // Automatically generate JaCoCo report after tests
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = "0.8.13"
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
     }
 }
+
+/*
+ * Comment this block later when your project has enough test coverage.
+ * This will fail the build if coverage drops below 10%.
+ */
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = true
+            limit {
+                minimum = 0.10
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
+*/
 
 jar {
     manifest {

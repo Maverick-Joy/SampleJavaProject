@@ -8,3 +8,31 @@ on:
 jobs:
   pr-compliance-check:
     uses: Maverick-Joy/reusable-workflows/.github/workflows/pr-integrity.yml@main
+
+  build-gradle-project:
+    uses: Maverick-Joy/reusable-workflows/.github/workflows/build-gradle.yml@main
+    with:
+      java-version: "21"
+      gradle-command: clean build
+
+  build-maven-project:
+    uses: Maverick-Joy/reusable-workflows/.github/workflows/build-maven.yml@v1
+    with:
+      java-version: "21"
+      maven-goals: clean package
+
+  unit-test-gradle:
+    uses: Maverick-Joy/reusable-workflows/.github/workflows/unit-test-gradle.yml@v1
+    with:
+      java-version: "21"
+
+  sonarqube-scan-gradle:
+    uses: Maverick-Joy/reusable-workflows/.github/workflows/sonarqube-gradle.yml@main
+    with:
+      sonar-project-key: Maverick-Joy_SampleJavaProject
+      sonar-project-name: SampleJavaProject
+      sonar-organization: maverick-joy
+      java-version: "21"
+    secrets:
+      SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
