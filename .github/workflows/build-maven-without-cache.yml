@@ -71,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           # This name is what you will see in the GitHub Actions summary page
-          name: jar-artifact-java-${{ matrix.java }}
+          name: maven-artifact-java-${{ matrix.java }}-build-${{ github.run_number }}
 
           # This is the path to the file you want to upload.
           # It looks like your build created a "jar-with-dependencies" file,

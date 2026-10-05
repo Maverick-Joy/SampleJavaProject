@@ -8,11 +8,23 @@ on:
 #    branches: [ "main" ]
 
   # ❌ Removed 'push' and 'pull_request' triggers
-
   # ✅ Keep only this trigger for manual execution
 
   # Allows you to manually run the workflow from the Actions tab on GitHub
   workflow_dispatch:
+    inputs:
+      runner-label:
+        description: 'Select the runner label (e.g., ubuntu-latest, ubuntu-26.04)'
+        required: true
+        type: choice
+        default: 'ubuntu-26.04'
+        options:
+          - 'ubuntu-26.04'
+          - 'ubuntu-latest'
+      workflow-run-name:
+        description: 'Name of the workflow run (optional)'
+        required: false
+        default: 'gradle build with cache'
 
 jobs:
   gradle-build:
@@ -21,8 +33,9 @@ jobs:
 
     # Optional: You can specify a matrix of Java versions to test against
     strategy:
+      fail-fast: false
       matrix:
-        java: [ '21' ] # Change this to your project's required Java version (e.g., '11', '21')
+        java: [ '11', '17', '21', '25' ] #Change this to your project's required Java version (e.g., '11', '17', '21', '25')
 
     steps:
       - name: ⬇️ Checkout Repository
@@ -50,7 +63,7 @@ jobs:
       - name: 🔑 Make gradlew Executable
         run: chmod +x gradlew
 
-      - name: ⚙️ Build and Run Tests
+      - name: ⚙️ Build and Run Tests with Java ${{ matrix.java }}
         run: ./gradlew clean build --refresh-dependencies --info
 
       # You can add more steps here, such as:
@@ -66,7 +79,7 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           # This name is what you will see in the GitHub Actions summary page
-          name: project-jar-artifact
+          name: gradle-artifact-java-${{ matrix.java }}-build-${{ github.run_number }}
 
           # This is the path to the file you want to upload.
           # It looks like your build created a "jar-with-dependencies" file,
