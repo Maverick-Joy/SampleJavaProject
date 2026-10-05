@@ -75,4 +75,4 @@ jobs:
           path: build/libs/*.jar
 
           # Optional: How long to keep the artifact before it's deleted (e.g., 5 days)
-          retention-days: 180
+          retention-days: 90
