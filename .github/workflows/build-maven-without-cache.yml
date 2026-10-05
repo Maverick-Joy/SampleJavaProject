@@ -2,27 +2,39 @@ name: Maven Artifact (without cache)
 
 on:
   # Triggers the workflow on push or pull request events to the main branch
-#  push:
-#    branches: [ "main" ]
-#  pull_request:
-#    branches: [ "main" ]
+  #  push:
+  #    branches: [ "main" ]
+  #  pull_request:
+  #    branches: [ "main" ]
 
   # ❌ Removed 'push' and 'pull_request' triggers
-
   # ✅ Keep only this trigger for manual execution
 
   # Allows you to manually run the workflow from the Actions tab on GitHub
   workflow_dispatch:
+    inputs:
+      runner-label:
+        description: 'Select the runner label (e.g., ubuntu-latest, ubuntu-26.04)'
+        required: true
+        type: choice
+        default: 'ubuntu-26.04'
+        options:
+          - 'ubuntu-26.04'
+          - 'ubuntu-latest'
+      workflow-run-name:
+        description: 'Name of the workflow run (optional)'
+        required: false
+        default: 'maven build without cache'
 
 jobs:
   java-maven-build:
     # Specifies the runner environment for this job
-    runs-on: ubuntu-26.04 #ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner-label || 'ubuntu-26.04' }} # Default to ubuntu-26.04 if not specified
 
-    # Optional: You can specify a matrix of Java versions to test against
     strategy:
+      fail-fast: false
       matrix:
-        java: [ '21' ] # Change this to your project's required Java version (e.g., '11', '21')
+        java: [ '11', '17', '21', '25' ] #Change this to your project's required Java version (e.g., '11', '17', '21', '25')
 
     steps:
       - name: ⬇️ Checkout Repository
@@ -35,30 +47,16 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
-          # Use the Maven settings file if you have one
-          # Removed cache: 'maven' to prevent setup-java caching
-          # cache: 'maven'
 
-      # - name: 📦 Cache Maven Dependencies
-      #   # This step caches the local Maven repository (~/.m2/repository)
-      #   # It dramatically speeds up subsequent builds by reusing downloaded dependencies
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ~/.m2/repository
-      #     # Key is generated based on the pom.xml file hash to ensure a new cache
-      #     # is created when dependencies change.
-      #     key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-maven-
 
-      - name: ⚙️ Build and Run Tests
+      - name: ⚙️ Build and Run Tests with Java ${{ matrix.java }}
         # Run the standard Maven command for building and running tests.
         # The '-B' (batch mode) flag makes the output less verbose and better for CI/CD.
         # The '-Dmaven.test.failure.ignore=true' is optional; remove it if you want the
         # build to fail immediately on any test failure (highly recommended).
         # 'clean' deletes the 'target' directory before building.
         # '-U' forces Maven to check for updated dependencies and plugins from the remote repository.
-        run: mvn clean package -U -B
+        run: mvn clean package -U -B -Djava.version=${{ matrix.java }}
 
       # You can add more steps here, such as:
       # - Uploading the build artifact (e.g., a JAR file)
@@ -73,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           # This name is what you will see in the GitHub Actions summary page
-          name: project-jar-artifact
+          name: jar-artifact-java-${{ matrix.java }}
 
           # This is the path to the file you want to upload.
           # It looks like your build created a "jar-with-dependencies" file,
