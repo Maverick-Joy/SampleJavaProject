@@ -27,7 +27,7 @@ on:
         default: 'maven build without cache'
 
 jobs:
-  java-maven-build:
+  maven-build:
     # Specifies the runner environment for this job
     runs-on: ${{ github.event.inputs.runner-label || 'ubuntu-26.04' }} # Default to ubuntu-26.04 if not specified
 
