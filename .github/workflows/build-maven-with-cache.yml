@@ -80,4 +80,4 @@ jobs:
           path: target/*.jar
 
           # Optional: How long to keep the artifact before it's deleted (e.g., 5 days)
-          retention-days: 150
+          retention-days: 90
