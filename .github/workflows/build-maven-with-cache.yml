@@ -1,4 +1,4 @@
-name: Build Maven Artifact (with cache) via GHA CI platform
+name: Maven Artifact (with cache)
 
 on:
   # Triggers the workflow on push or pull request events to the main branch
@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  java-maven-build-via-github-actions:
+  java-maven-build:
     # Specifies the runner environment for this job
     runs-on: ubuntu-26.04 #ubuntu-latest
 

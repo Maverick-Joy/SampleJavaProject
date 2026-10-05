@@ -1,4 +1,4 @@
-name: Gradle Build
+name: Gradle Build (with cache)
 
 on:
   # Triggers the workflow on push or pull request events to the main branch
@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  java-maven-build-via-github-actions:
+  gradle-build:
     # Specifies the runner environment for this job
     runs-on: ubuntu-26.04 #ubuntu-latest
 
@@ -35,21 +35,20 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
-          # Use the Maven settings file if you have one
-          # Removed cache: 'maven' to prevent setup-java caching
-          # cache: 'maven'
 
-      # - name: 📦 Cache Maven Dependencies
-      #   # This step caches the local Maven repository (~/.m2/repository)
-      #   # It dramatically speeds up subsequent builds by reusing downloaded dependencies
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ~/.m2/repository
-      #     # Key is generated based on the pom.xml file hash to ensure a new cache
-      #     # is created when dependencies change.
-      #     key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-maven-
+
+      - name: 📦 Cache Gradle Dependencies
+        uses: actions/cache@v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: 🔑 Make gradlew Executable
+        run: chmod +x gradlew
 
       - name: ⚙️ Build and Run Tests
         run: ./gradlew clean build --refresh-dependencies --info
@@ -72,8 +71,8 @@ jobs:
           # This is the path to the file you want to upload.
           # It looks like your build created a "jar-with-dependencies" file,
           # so we'll use a wildcard match to capture it.
-          # The 'target' folder is where Maven places all build output.
-          path: target/*.jar
+          # The 'build/libs/' folder is where Gradle places all build output.
+          path: build/libs/*.jar
 
           # Optional: How long to keep the artifact before it's deleted (e.g., 5 days)
           retention-days: 180
