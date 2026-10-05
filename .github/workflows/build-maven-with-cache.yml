@@ -13,17 +13,6 @@ on:
   # Allows you to manually run the workflow from the Actions tab on GitHub
   workflow_dispatch:
     inputs:
-      java-version:
-        description: 'Select the Java version for the build (e.g., 11, 21)'
-        required: true
-        type: choice
-        default: '21'
-        options:
-          - '8'
-          - '11'
-          - '17'
-          - '21'
-          - '25'
       runner-label:
         description: 'Select the runner label (e.g., ubuntu-latest, ubuntu-26.04)'
         required: true
@@ -42,16 +31,21 @@ jobs:
     # Specifies the runner environment for this job
     runs-on: ${{ github.event.inputs.runner-label || 'ubuntu-26.04' }} # Default to ubuntu-26.04 if not specified
 
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ '8', '11', '17', '21', '25' ]
+
     steps:
       - name: ⬇️ Checkout Repository
         # Action to check out your repository code
         uses: actions/checkout@v7.0.1
 
-      - name: ☕ Set up JDK ${{ github.event.inputs.java-version }}
+      - name: ☕ Set up JDK ${{ matrix.java }}
         # Action to set up the Java environment
         uses: actions/setup-java@v5
         with:
-          java-version: ${{ github.event.inputs.java-version }}
+          java-version: ${{ matrix.java }}
           distribution: 'temurin'
           # Use the Maven settings file if you have one
           cache: 'maven'
@@ -73,8 +67,8 @@ jobs:
         # The '-B' (batch mode) flag makes the output less verbose and better for CI/CD.
         # The '-Dmaven.test.failure.ignore=true' is optional; remove it if you want the
         # build to fail immediately on any test failure (highly recommended).
-        run: mvn -B package
-        # run: mvn -B test
+        # run: mvn -B package
+        run: mvn -B package -Djava.version=${{ matrix.java }}
 
       # You can add more steps here, such as:
       # - Uploading the build artifact (e.g., a JAR file)
