@@ -1,0 +1,25 @@
+#name: SonarQube Scan (Maven)
+#
+#on:
+#  push:
+#    branches:
+#      - '**'
+#
+#
+#jobs:
+#  sonarqube-scan:
+#    uses: Maverick-Joy/reusable-workflows/.github/workflows/sonarqube-maven.yml@main
+#    with:
+#      sonar-project-key: Maverick-Joy_SampleJavaProject
+#      sonar-project-name: SampleJavaProject
+#      sonar-organization: maverick-joy
+#    secrets:
+#      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+#
+#  quality-gate:
+#    needs: sonarqube-scan
+#    uses: Maverick-Joy/reusable-workflows/.github/workflows/quality-gate.yml@main
+#    secrets:
+#      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
