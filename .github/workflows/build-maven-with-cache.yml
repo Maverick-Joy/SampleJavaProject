@@ -8,32 +8,50 @@ on:
 #    branches: [ "main" ]
 
   # ❌ Removed 'push' and 'pull_request' triggers
-
   # ✅ Keep only this trigger for manual execution
 
   # Allows you to manually run the workflow from the Actions tab on GitHub
   workflow_dispatch:
+    inputs:
+      java-version:
+        description: 'Select the Java version for the build (e.g., 11, 21)'
+        required: true
+        type: choice
+        default: '21'
+        options:
+          - '8'
+          - '11'
+          - '17'
+          - '21'
+          - '25'
+      runner-label:
+        description: 'Select the runner label (e.g., ubuntu-latest, ubuntu-26.04)'
+        required: true
+        type: choice
+        default: 'ubuntu-26.04'
+        options:
+          - 'ubuntu-26.04'
+          - 'ubuntu-latest'
+      workflow-run-name:
+        description: 'Name of the workflow run (optional)'
+        required: false
+        default: 'maven build with cache'
 
 jobs:
   java-maven-build:
     # Specifies the runner environment for this job
-    runs-on: ubuntu-26.04 #ubuntu-latest
-
-    # Optional: You can specify a matrix of Java versions to test against
-    strategy:
-      matrix:
-        java: [ '21' ] # Change this to your project's required Java version (e.g., '11', '21')
+    runs-on: ${{ github.event.inputs.runner-label || 'ubuntu-26.04' }} # Default to ubuntu-26.04 if not specified
 
     steps:
       - name: ⬇️ Checkout Repository
         # Action to check out your repository code
         uses: actions/checkout@v7.0.1
 
-      - name: ☕ Set up JDK ${{ matrix.java }}
+      - name: ☕ Set up JDK ${{ github.event.inputs.java-version }}
         # Action to set up the Java environment
         uses: actions/setup-java@v5
         with:
-          java-version: ${{ matrix.java }}
+          java-version: ${{ github.event.inputs.java-version }}
           distribution: 'temurin'
           # Use the Maven settings file if you have one
           cache: 'maven'
