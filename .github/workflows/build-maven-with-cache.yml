@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: ⬇️ Checkout Repository
         # Action to check out your repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
 
       - name: ☕ Set up JDK ${{ matrix.java }}
         # Action to set up the Java environment
@@ -41,7 +41,7 @@ jobs:
       - name: 📦 Cache Maven Dependencies
         # This step caches the local Maven repository (~/.m2/repository)
         # It dramatically speeds up subsequent builds by reusing downloaded dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         with:
           path: ~/.m2/repository
           # Key is generated based on the pom.xml file hash to ensure a new cache
@@ -68,7 +68,7 @@ jobs:
       # ✨ NEW STEP: UPLOAD ARTIFACT
       # --------------------------------------------------------------------
       - name: 📤 Upload Build Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           # This name is what you will see in the GitHub Actions summary page
           name: project-jar-artifact
@@ -80,4 +80,4 @@ jobs:
           path: target/*.jar
 
           # Optional: How long to keep the artifact before it's deleted (e.g., 5 days)
-          retention-days: 60
+          retention-days: 150
