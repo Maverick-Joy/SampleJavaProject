@@ -62,7 +62,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: ⚙️ Build and Run Tests
+      - name: ⚙️ Build and Run Tests with Java ${{ matrix.java }}
         # Run the standard Maven command for building and running tests.
         # The '-B' (batch mode) flag makes the output less verbose and better for CI/CD.
         # The '-Dmaven.test.failure.ignore=true' is optional; remove it if you want the
