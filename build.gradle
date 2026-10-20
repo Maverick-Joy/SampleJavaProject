@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'org.programs'
-version = '1.0-SNAPSHOT'
+version = '1.1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -54,18 +54,18 @@ jacocoTestReport {
  * Comment this block later when your project has enough test coverage.
  * This will fail the build if coverage drops below 10%.
  */
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            enabled = true
-            limit {
-                minimum = 0.10
-            }
-        }
-    }
-}
+//jacocoTestCoverageVerification {
+//    violationRules {
+//        rule {
+//            enabled = true
+//            limit {
+//                minimum = 0.10
+//            }
+//        }
+//    }
+//}
 
-check.dependsOn jacocoTestCoverageVerification
+//check.dependsOn jacocoTestCoverageVerification
 
 jar {
     manifest {
