@@ -3,10 +3,6 @@ package org.programs;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * Unit test for simple App.
- */
-
 public class AppTest {
 
 
@@ -24,7 +20,7 @@ public class AppTest {
     }
 
 
-    @Test
+    @Test (priority = -1)
     public void testApp3() {
         System.out.println("-----Test3 executed successfully after assertion-----");
         Assert.assertTrue(true);
