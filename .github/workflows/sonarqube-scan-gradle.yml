@@ -2,8 +2,7 @@ name: SonarQube Scan (Gradle)
 
 on:
   push:
-    branches:
-      - '**'
+    branches: [main, master, develop]
 
 
 jobs:

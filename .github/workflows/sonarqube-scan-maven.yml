@@ -2,8 +2,7 @@ name: SonarQube Scan (Maven)
 
 on:
   push:
-    branches:
-      - '**'
+    branches: [main, master, develop]
 
 
 jobs:
