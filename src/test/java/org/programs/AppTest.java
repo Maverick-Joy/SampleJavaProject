@@ -1,49 +1,50 @@
 package org.programs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Slf4j
 public class AppTest {
-
 
     @Test
     public void testApp1() {
-        System.out.println("-----Test1 executed successfully after assertion-----");
-        Assert.assertTrue(true);
+        Assert.assertTrue(false);
+        log.info("-----Test1 executed successfully after assertion-----");
     }
 
 
     @Test
     public void testApp2() {
-        System.out.println("-----Test2 executed successfully after assertion-----");
         Assert.assertTrue(true);
+        log.info("-----Test2 executed successfully after assertion-----");
     }
 
 
     @Test (priority = -1)
     public void testApp3() {
-        System.out.println("-----Test3 executed successfully after assertion-----");
-        Assert.assertTrue(true);
+        Assert.assertTrue(false);
+        log.info("-----Test3 executed successfully after assertion-----");
     }
 
 
     @Test
     public void testApp4() {
-        System.out.println("-----Test4 executed successfully after assertion-----");
         Assert.assertTrue(true);
+        log.info("-----Test4 executed successfully after assertion-----");
     }
 
 
-    @Test
+    @Test (priority = -2)
     public void testApp5() {
-        System.out.println("-----Test5 executed successfully after assertion-----");
         Assert.assertTrue(true);
+        log.info("-----Test5 executed successfully after assertion-----");
     }
 
 
     @Test
     public void testApp6() {
-        System.out.println("-----Test6 executed successfully after assertion-----");
         Assert.assertTrue(true);
+        log.info("-----Test6 executed successfully after assertion-----");
     }
 }
