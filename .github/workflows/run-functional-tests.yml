@@ -1,0 +1,104 @@
+name: Run Functional Tests
+
+run-name: ${{ inputs.workflow-run-name }}
+#run-name: ${{ inputs.workflow-run-name }} - ${{ inputs.xxx }} - ${{ inputs.xxx }}
+#run-name: ${{ inputs.workflow-run-name }} - ${{ github.ref_name }}-${{ github.run_number }}
+
+on:
+  # Triggers the workflow on push or pull request events to the main branch
+  #  push:
+  #    branches: [ "main" ]
+  #  pull_request:
+  #    branches: [ "main" ]
+
+  # ❌ Removed 'push' and 'pull_request' triggers
+  # ✅ Keep only this trigger for manual execution
+
+  # Allows you to manually run the workflow from the Actions tab on GitHub
+  workflow_dispatch:
+    inputs:
+      runner-label:
+        description: 'Select the runner label (e.g., ubuntu-latest, ubuntu-26.04)'
+        required: true
+        type: choice
+        default: 'ubuntu-26.04'
+        options:
+          - 'ubuntu-26.04'
+          - 'ubuntu-latest'
+      workflow-run-name:
+        description: 'Name of the workflow run (optional)'
+        required: false
+        default: 'run functional tests'
+
+concurrency:
+  group: reportportal-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run-functioanl-tests:
+    name: Run TestNG suite and publish results to ReportPortal
+    runs-on: ${{ github.event.inputs.runner-label || 'ubuntu-26.04' }} # Default to ubuntu-26.04 if not specified
+    timeout-minutes: 120
+
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ '11', '17', '21', '25' ] #Change this to your project's required Java version (e.g., '11', '17', '21', '25')
+
+    env:
+      RP_ENDPOINT: ${{ vars.RP_ENDPOINT }}
+      RP_API_KEY: ${{ secrets.RP_API_KEY }}
+      RP_PROJECT: ${{ vars.RP_PROJECT }}
+      RP_LAUNCH: ${{ github.repository }}-${{ github.ref_name }}-${{ github.run_number }}
+      RP_DESCRIPTION: "TestNG run for ${{ github.repository }} on ${{ github.ref_name }}"
+      RP_ATTRIBUTES: "build:${{ github.run_number }};branch:${{ github.ref_name }};env:github-actions"
+
+    steps:
+      - name: ⬇️ Checkout Repository
+        # Action to check out your repository code
+        uses: actions/checkout@v7.0.1
+
+      - name: ☕ Set up JDK ${{ matrix.java }}
+        # Action to set up the Java environment
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+
+      - name: ⚙️ Build, Test & Publish to ReportPortal (Java ${{ matrix.java }})
+        run: |
+          ./mvnw clean package -U -B \
+            -Djava.version=${{ matrix.java }} \
+            -Drp.endpoint="$RP_ENDPOINT" \
+            -Drp.api.key="$RP_API_KEY" \
+            -Drp.project="$RP_PROJECT" \
+            -Drp.launch="$RP_LAUNCH" \
+            -Drp.description="$RP_DESCRIPTION" \
+            -Drp.attributes="$RP_ATTRIBUTES" \
+            -Drp.enable=true \
+            -Drp.reporting.async=true
+
+      # You can add more steps here, such as:
+      # - Uploading the build artifact (e.g., a JAR file)
+      # - Pushing a Docker image
+      # - Deploying to a cloud service
+
+
+      # --------------------------------------------------------------------
+      # ✨ NEW STEP: UPLOAD ARTIFACT
+      # --------------------------------------------------------------------
+      - name: 📤 Upload Build Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          # This name is what you will see in the GitHub Actions summary page
+          name: mvn-artifact-jdk-${{ matrix.java }}-run-id-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+
+          # This is the path to the file you want to upload.
+          # It looks like your build created a "jar-with-dependencies" file,
+          # so we'll use a wildcard match to capture it.
+          # The 'target' folder is where Maven places all build output.
+          path: target/*.jar
+          if-no-files-found: warn
+
+          # Optional: How long to keep the artifact before it's deleted (e.g., 5 days)
+          retention-days: 90
