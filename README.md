@@ -24,7 +24,9 @@ This project is integrated with Report Portal on [localhost:8082](http://localho
 [Report Portal credentials can be fetched from here](https://reportportal.io/installation/)
 
 use the below command at "C:\reportportal" path before running any tests on local
+
 docker compose -p reportportal up -d
 
 Use below command to run the tests in local
+
 mvn clean test -U -B -Djava.version=<java-version> -Drp.endpoint="http://localhost:8082" -Drp.api.key="<my-rp-api-key>" -Drp.project="default_personal" -Drp.launch="sample-java-tests-run" -Drp.description="TestNG run of SampleJavaProject" -Drp.attributes="build:local;env:qa" -Drp.enable=true -Drp.reporting.async=true
