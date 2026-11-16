@@ -19,7 +19,7 @@ This project is integrated with SonarQube for code quality analysis. The SonarQu
 
 
 ## Report Portal Integration
-This project is integrated with Report Portal on [localhost:8082](http://localhost:8082/)
+This project is integrated with Report Portal on [localhost:8082](http://localhost:8082/ui/#default_personal/launches/all)
 
 [Report Portal credentials can be fetched from here](https://reportportal.io/installation/)
 
