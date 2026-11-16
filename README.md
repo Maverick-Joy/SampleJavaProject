@@ -25,9 +25,10 @@ This project is integrated with Report Portal on [localhost:8082](http://localho
 
 ![img.png](img.png)
 
-use the below command at "C:\reportportal" path before running any tests on local
+Steps:
 
-docker compose -p reportportal up -d
+1. Open Docker Decktop
+2. Run 'docker compose -p reportportal up -d' command at "C:\reportportal" path in local before running any tests
 
 Use below command to run the tests in local
 
