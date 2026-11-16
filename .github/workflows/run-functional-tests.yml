@@ -37,7 +37,7 @@ concurrency:
 jobs:
   run-functioanl-tests:
     name: Run TestNG suite and publish results to ReportPortal
-    runs-on: ${{ github.event.inputs.runner-label || 'ubuntu-26.04' }} # Default to ubuntu-26.04 if not specified
+    runs-on: ${{ inputs.runner-label || 'ubuntu-26.04' }} # Default to ubuntu-26.04 if not specified
     timeout-minutes: 120
 
     strategy:
@@ -67,7 +67,8 @@ jobs:
 
       - name: ⚙️ Build, Test & Publish to ReportPortal (Java ${{ matrix.java }})
         run: |
-          ./mvnw clean package -U -B \
+          chmod +x ./mvnw
+          bash ./mvnw clean package -U -B \
             -Djava.version=${{ matrix.java }} \
             -Drp.endpoint="$RP_ENDPOINT" \
             -Drp.api.key="$RP_API_KEY" \
