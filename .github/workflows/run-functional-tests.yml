@@ -34,6 +34,9 @@ concurrency:
   group: reportportal-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   run-functioanl-tests:
     name: Run TestNG suite and publish results to ReportPortal
@@ -65,12 +68,9 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
 
-      - name: 🔐 Fix Maven wrapper permissions
-        run: chmod +x ./mvnw
-
       - name: ⚙️ Build, Test & Publish to ReportPortal (Java ${{ matrix.java }})
         run: |
-          ./mvnw clean package -U -B \
+          mvn clean package -U -B \
             -Djava.version=${{ matrix.java }} \
             -Drp.endpoint="$RP_ENDPOINT" \
             -Drp.api.key="$RP_API_KEY" \
